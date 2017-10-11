@@ -1,15 +1,41 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import { StyleSheet, Text, View, Button } from 'react-native';
+import { StackNavigator } from 'react-navigation';
 
-export default class App extends React.Component {
+var DiceRoller = require('./DiceRoller.js');
+
+class HomeScreen extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {total: 0};
+  }
+  static navigationOptions = {
+    title: 'Welcome',
+  };
   render() {
+    const { navigate } = this.props.navigation;
+    let total = this.state.total;
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
+      <View>
+        <Text>Hello, Homescreen!</Text>
+        <Button
+          onPress={()=> navigate("Roller")}
+          title="Go to Dice Roller"
+        />
       </View>
-    );
+    )
+  }
+}
+
+const DndApp = StackNavigator({
+  Home: { screen: HomeScreen },
+  Roller: { screen: DiceRoller }
+});
+
+export default class App extends Component {
+  render() {
+    return <DndApp />;
   }
 }
 
@@ -18,6 +44,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'center'
+  }
 });
