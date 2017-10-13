@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
 var DiceRoller = require('./DiceRoller.js');
+var Character = require('./Character.js');
 
 class HomeScreen extends Component {
 
