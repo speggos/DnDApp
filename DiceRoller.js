@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity } from 'react-native';
 
 //TODO: Add modifier functionality
 

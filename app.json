@@ -1,5 +1,7 @@
 {
   "expo": {
     "sdkVersion": "21.0.0"
-  }
+  },
+  "name": "dndApp",
+  "displayName": "Chacacter Sheet 5"
 }

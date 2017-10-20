@@ -1,36 +1,110 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
 var DiceRoller = require('./DiceRoller.js');
 var Character = require('./Character.js');
+var CharacterSheet = require('./CharacterSheet.js');
 
 class HomeScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {total: 0};
   }
   static navigationOptions = {
-    title: 'Welcome',
+    title: 'Characters',
   };
   render() {
     const { navigate } = this.props.navigation;
-    let total = this.state.total;
     return (
-      <View>
-        <Text>Hello, Homescreen!</Text>
+      <View style = {styles.container}>
+
+        <Banner/>
+        <CharacterList {...this.props}/>
+
         <Button
-          onPress={()=> navigate("Roller")}
-          title="Go to Dice Roller"
+          onPress = {()=> navigate("Roller")}
+          title = "Go to Dice Roller"
         />
       </View>
     )
   }
 }
 
+class Banner extends Component {
+  render() {
+    return (
+      <View style = {styles.bannerContainer}>
+        <Image
+          style = {styles.banner}
+          source = {require('./title.png')}
+        />
+      </View>
+    )
+  }
+}
+
+class CharacterList extends Component {
+
+  constructor(props) {
+    super(props);
+
+    //Hard coded for now. Will accept stored data
+    var char1 = new Character()
+    char1.name = "Character 1"
+    var char2 = new Character()
+    char2.name = "Character 2"
+
+    this.state = {Characters: [char1, char2] };
+  }
+
+  addCharacter = () => {
+
+    var Characters = this.state.Characters
+    var newCharacter = new Character();
+
+    newCharacter.name = "Character " + (Characters.length + 1)
+
+    this.setState({Characters: Characters.concat([newCharacter])});
+
+    console.log(Characters.length);
+  }
+
+  render() {
+
+    var CharList = this.state.Characters.map((char)=> <CharacterButton {...this.props} character={char} key={this.state.Characters.indexOf(char)} />)
+
+    return (
+      <View style = {styles.characters} >
+        {CharList}
+
+        <TouchableOpacity style = {[styles.characterButton, {marginTop: 30}]} onPress = {this.addCharacter}>
+          <Text>Add New Character</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+}
+
+class CharacterButton extends Component {
+
+  constructor(props) {
+    super(props);
+  }
+  render () {
+    const { navigate } = this.props.navigation;
+    
+    return (
+      <TouchableOpacity style = {styles.characterButton} onPress = {()=> navigate("CharacterSheet", {character: this.props.character})}>
+          <Text>{this.props.character.name}</Text>
+      </TouchableOpacity>
+    )
+  }
+}
+
 const DndApp = StackNavigator({
   Home: { screen: HomeScreen },
+  CharacterSheet: { screen: CharacterSheet},
   Roller: { screen: DiceRoller }
 });
 
@@ -46,5 +120,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  banner: {
+    flex: 1,
+    width: undefined,
+    height: undefined,
+    alignSelf: 'stretch',
+    resizeMode: 'stretch'
+  },
+  bannerContainer: {
+    flex: 1,
+    width: '80%'
+  },
+  characters: {
+    flex: 2,
+    width: '60%',
+    backgroundColor: '#2ba',
+  },
+  characterButton: {
+    height: '10%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#A39367',
+    borderWidth: 2,
+    marginTop: 10,
+    marginBottom: 10
   }
 });
