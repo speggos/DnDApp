@@ -1,32 +1,35 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
 var DiceRoller = require('./DiceRoller.js');
 var Character = require('./Character.js');
 var CharacterSheet = require('./CharacterSheet.js');
 
+
 class HomeScreen extends Component {
 
   constructor(props) {
     super(props);
   }
-  static navigationOptions = {
-    title: 'Characters',
-  };
   render() {
     const { navigate } = this.props.navigation;
     return (
-      <View style = {styles.container}>
 
-        <Banner/>
-        <CharacterList {...this.props}/>
+        <ImageBackground
+          style={[styles.container, styles.banner]}
+          source={require('./background.png')}
+        >
 
-        <Button
-          onPress = {()=> navigate("Roller")}
-          title = "Go to Dice Roller"
-        />
-      </View>
+          <Banner/>
+          <CharacterList {...this.props}/>
+
+          <Button
+            onPress = {()=> navigate("Roller")}
+            title = "Go to Dice Roller"
+          />
+
+        </ImageBackground>
     )
   }
 }
@@ -119,12 +122,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   banner: {
     flex: 1,
-    width: undefined,
-    height: undefined,
+    width: null,
+    height: null,
     alignSelf: 'stretch',
     resizeMode: 'stretch'
   },
@@ -135,7 +138,6 @@ const styles = StyleSheet.create({
   characters: {
     flex: 2,
     width: '60%',
-    backgroundColor: '#2ba',
   },
   characterButton: {
     height: '10%',
