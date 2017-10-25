@@ -5,6 +5,7 @@ import { StackNavigator } from 'react-navigation';
 var DiceRoller = require('./DiceRoller.js');
 var Character = require('./Character.js');
 var CharacterSheet = require('./CharacterSheet.js');
+var CharacterMaker = require('./CharacterMaker.js');
 
 
 class HomeScreen extends Component {
@@ -76,13 +77,18 @@ class CharacterList extends Component {
   render() {
 
     var CharList = this.state.Characters.map((char)=> <CharacterButton {...this.props} character={char} key={this.state.Characters.indexOf(char)} />)
+    const { navigate } = this.props.navigation;
 
     return (
       <View style = {styles.characters} >
         {CharList}
 
         <TouchableOpacity style = {[styles.characterButton, {marginTop: 30}]} onPress = {this.addCharacter}>
-          <Text>Add New Character</Text>
+          <Text>Add New Blank Character</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style = {[styles.characterButton, {marginTop: 10}]} onPress = {()=> navigate("CharacterMaker")}>
+          <Text>Create New Character</Text>
         </TouchableOpacity>
       </View>
     )
@@ -108,6 +114,7 @@ class CharacterButton extends Component {
 const DndApp = StackNavigator({
   Home: { screen: HomeScreen },
   CharacterSheet: { screen: CharacterSheet},
+  CharacterMaker: { screen: CharacterMaker},
   Roller: { screen: DiceRoller }
 });
 
@@ -122,18 +129,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   banner: {
     flex: 1,
     width: null,
-    height: null,
-    alignSelf: 'stretch',
-    resizeMode: 'stretch'
+    height: null
   },
   bannerContainer: {
-    flex: 1,
-    width: '80%'
+    flex: 1.3,
+    width: '90%'
   },
   characters: {
     flex: 2,
@@ -144,7 +149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#A39367',
-    borderWidth: 2,
+    borderWidth: 3,
     marginTop: 10,
     marginBottom: 10
   }
