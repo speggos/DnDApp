@@ -2,11 +2,12 @@ import React, {Component} from 'react';
 import { StyleSheet, Text, View, Button, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
-var DiceRoller = require('./DiceRoller.js');
-var Character = require('./Character.js');
-var CharacterSheet = require('./CharacterSheet.js');
-var CharacterMaker = require('./CharacterMaker.js');
+import DiceRoller from './DiceRoller.js';
+import Character from './Character.js';
+import CharacterSheet from './CharacterSheet.js';
+import {CharacterMaker, ClassPicker, RacePicker, AbilityPicker, WeaponPicker} from './CharacterMaker.js';
 
+import './rules.js';
 
 class HomeScreen extends Component {
 
@@ -87,7 +88,9 @@ class CharacterList extends Component {
           <Text>Add New Blank Character</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style = {[styles.characterButton, {marginTop: 10}]} onPress = {()=> navigate("CharacterMaker")}>
+        <TouchableOpacity 
+          style = {[styles.characterButton, {marginTop: 10}]}
+          onPress = {()=> navigate("CharacterMaker", {character: this.props.character})}>
           <Text>Create New Character</Text>
         </TouchableOpacity>
       </View>
@@ -115,6 +118,10 @@ const DndApp = StackNavigator({
   Home: { screen: HomeScreen },
   CharacterSheet: { screen: CharacterSheet},
   CharacterMaker: { screen: CharacterMaker},
+  ClassPicker: { screen: ClassPicker},
+  RacePicker: { screen: RacePicker},
+  AbilityPicker: { screen: AbilityPicker},
+  WeaponPicker: { screen: WeaponPicker},
   Roller: { screen: DiceRoller }
 });
 
@@ -149,7 +156,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#A39367',
-    borderWidth: 3,
+    borderWidth: 2,
     marginTop: 10,
     marginBottom: 10
   }
