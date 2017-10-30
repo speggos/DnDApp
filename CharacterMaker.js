@@ -22,15 +22,21 @@ class Background extends Component {
 
 export class CharacterMaker extends Component {
 
+	constructor(props) {
+		super(props)
+	}
+
 	render() {
 
 		const { navigate } = this.props.navigation;
+ 		const { params } = this.props.navigation.state;
+		const character = params.character;	
 
 		return (
 
 			<Background>
 				<TouchableHighlight
-					onPress = {()=> navigate("ClassPicker", { character: this.props.character})}>
+					onPress = {()=> navigate("ClassPicker", { character: character})}>
 
 					<View style = {styles.textContainer}>
 
@@ -39,9 +45,10 @@ export class CharacterMaker extends Component {
 						</Text>
 
 						<Text style={styles.text}>
-							This section will help you create a new character. DnD has many rules, and creating a character
-							may take up to 20 minutes. If this is your first time, we suggest taking a look at the DnD
-							players handbook reference. Click the book at the bottom of the screen at any time to view the guide
+							This section will help you create a new character. DnD has many rules, and creating a 
+							character may take up to 20 minutes. If this is your first time, we suggest taking a
+							look at the DnD players handbook reference. Click the book at the bottom of the 
+							screen at any time to view the guide
 						</Text>
 
 						<Text style={styles.title}>
@@ -59,14 +66,26 @@ export class CharacterMaker extends Component {
 export class ClassPicker extends Component {
 
 	constructor(props) {
-		super(props)
+		super(props);
+	}
+
+	selectClass = (character, item) => {
+
+		character.class = item.name;
+
+		this.props.navigation.navigate("RacePicker", {character: character});
 	}
 
 	render() {
 
 		const { navigate } = this.props.navigation;
-		var classes = global.rules.classes
-		console.log(classes);
+ 		const { params } = this.props.navigation.state;
+		const character = params.character;	
+
+		const classes = global.rules.classes;
+
+		console.log(character);
+
 
 		return(
 			<Background>
@@ -74,7 +93,8 @@ export class ClassPicker extends Component {
 
 					<TouchableOpacity 
 						style={{}}
-						onPress={()=>navigate("RacePicker", { character: this.props.character})}>
+						onPress={
+							()=>navigate("RacePicker", { character: character})}>
 
 						<View style = {[styles.textContainer]}>
 							<Text style={styles.title}>
@@ -92,7 +112,11 @@ export class ClassPicker extends Component {
 					<View style = {[styles.textContainer, {alignItems: 'center', marginVertical: '20%'}]}>
 						<FlatList
 							data = {classes}
-							renderItem={({item}) => <Text>{item.name}</Text>}
+							renderItem={({item}) => 
+								<Text
+									onPress={()=>this.selectClass(character, item)}>
+										{item.name}
+								</Text>}
 						/>
 
 					</View>
@@ -108,18 +132,27 @@ export class RacePicker extends Component {
 		super(props)
 	}
 
+	selectRace = (character, item) => {
+
+		character.race = item.name;
+
+		this.props.navigation.navigate("AbilityPicker", { character: character});
+	}
+
 	render() {
 
-		const {navigate} = this.props.navigation;
-		var races = global.rules.races;
-		console.log(races);
+		const { navigate } = this.props.navigation;
+ 		const { params } = this.props.navigation.state;
+		const character = params.character;	
+
+		const races = global.rules.races;
 
 		return (
 				<Background>
 					<View style={{justifyContent: 'space-between', alignItems: 'center'}}>
 
 						<TouchableOpacity 
-						onPress={()=> navigate("WeaponPicker", { character: this.props.character})}>
+						onPress={()=> navigate("AbilityPicker", { character: this.props.character})}>
 
 						<View style={[styles.textContainer, {height: '20%'}]}>
 							<Text style={styles.title}>
@@ -131,7 +164,12 @@ export class RacePicker extends Component {
 						<View style={[styles.textContainer, {height: '40%'}]}>
 							<FlatList
 								data = {races}
-								renderItem={({item}) => <Text style={styles.text}>{item.name}</Text>}
+								renderItem={({item}) => 
+									<Text 
+										style={styles.text}
+										onPress={()=>this.selectRace(character, item)}>
+											{item.name}
+									</Text>}
 							/>
 						</View>
 					</View>
@@ -148,8 +186,15 @@ export class AbilityPicker extends Component {
 
 	render() {
 
+		const {navigate} = this.props.navigation;
+		const { params } = this.props.navigation.state;
+		const character = params.character;	
+
+		console.log(character);		
+
 		return (
 			<Background>
+				<Text onPress={()=> navigate("WeaponPicker", { character: this.props.character})}> Ability Picker </Text>
 
 			</Background>
 		)

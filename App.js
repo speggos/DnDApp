@@ -72,7 +72,7 @@ class CharacterList extends Component {
 
     this.setState({Characters: Characters.concat([newCharacter])});
 
-    console.log(Characters.length);
+    return newCharacter;
   }
 
   render() {
@@ -90,8 +90,11 @@ class CharacterList extends Component {
 
         <TouchableOpacity 
           style = {[styles.characterButton, {marginTop: 10}]}
-          onPress = {()=> navigate("CharacterMaker", {character: this.props.character})}>
-          <Text>Create New Character</Text>
+          onPress = {
+            ()=> navigate("CharacterMaker", {character: this.addCharacter()})
+          }>
+
+            <Text>Create New Character</Text>
         </TouchableOpacity>
       </View>
     )
@@ -107,7 +110,10 @@ class CharacterButton extends Component {
     const { navigate } = this.props.navigation;
     
     return (
-      <TouchableOpacity style = {styles.characterButton} onPress = {()=> navigate("CharacterSheet", {character: this.props.character})}>
+      <TouchableOpacity
+        style = {styles.characterButton}
+        onPress = {()=> navigate("CharacterSheet", {character: this.props.character})}
+        >
           <Text>{this.props.character.name}</Text>
       </TouchableOpacity>
     )
