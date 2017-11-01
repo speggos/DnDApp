@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity, ImageBackground, AsyncStorage } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
 import DiceRoller from './DiceRoller.js';
@@ -9,6 +9,8 @@ import {CharacterMaker, ClassPicker, RacePicker, AbilityPicker, WeaponPicker} fr
 
 import './rules.js';
 
+const CHARACTER_KEY = "Characters";
+
 class HomeScreen extends Component {
 
   constructor(props) {
@@ -16,6 +18,8 @@ class HomeScreen extends Component {
   }
   render() {
     const { navigate } = this.props.navigation;
+
+    
     return (
 
         <ImageBackground
@@ -54,35 +58,63 @@ class CharacterList extends Component {
   constructor(props) {
     super(props);
 
-    //Hard coded for now. Will accept stored data
-    var char1 = new Character()
-    char1.name = "Character 1"
-    var char2 = new Character()
-    char2.name = "Character 2"
-
-    this.state = {Characters: [char1, char2] };
+    this.state = {Characters: []};
   }
 
   addCharacter = () => {
 
-    var Characters = this.state.Characters
     var newCharacter = new Character();
+    var characters = this.state.Characters;
+    console.log(characters);
 
-    newCharacter.name = "Character " + (Characters.length + 1)
+    newCharacter.name = "Character " + characters.length;
 
-    this.setState({Characters: Characters.concat([newCharacter])});
+    characters = characters.concat([newCharacter]);
 
-    return newCharacter;
+    AsyncStorage.setItem(CHARACTER_KEY, JSON.stringify(characters))
+      .then((characters)=> {
+        this.setState({
+          Characters: characters
+        });
+      })
+  }
+
+  deleteCharacters = () => {
+
+    var characters = [];
+
+    AsyncStorage.setItem(CHARACTER_KEY, JSON.stringify(characters))
+      .then((characters)=> {
+        this.setState({
+          Characters: characters
+        });
+      })
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem(CHARACTER_KEY)
+      .then((response)=> JSON.parse(response))
+      .then((characters) => {
+        this.setState({
+          Characters: characters
+        });
+      })
   }
 
   render() {
 
-    var CharList = this.state.Characters.map((char)=> <CharacterButton {...this.props} character={char} key={this.state.Characters.indexOf(char)} />)
+    var characters = this.state.Characters;
+
+    var charList = characters.map((char)=> <CharacterButton {...this.props} character={char} key={characters.indexOf(char)} />)
+
     const { navigate } = this.props.navigation;
+
+    console.log("Rendering, chars is")
+    console.log(characters);
 
     return (
       <View style = {styles.characters} >
-        {CharList}
+        {charList}
 
         <TouchableOpacity style = {[styles.characterButton, {marginTop: 30}]} onPress = {this.addCharacter}>
           <Text>Add New Blank Character</Text>
@@ -91,11 +123,16 @@ class CharacterList extends Component {
         <TouchableOpacity 
           style = {[styles.characterButton, {marginTop: 10}]}
           onPress = {
-            ()=> navigate("CharacterMaker", {character: this.addCharacter()})
+            ()=> navigate("CharacterMaker", {character: new Character()})
           }>
 
             <Text>Create New Character</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style = {[styles.characterButton, {marginTop: 10}]} onPress = {this.deleteCharacters}>
+          <Text>Clear all characters</Text>
+        </TouchableOpacity>
+
       </View>
     )
   }

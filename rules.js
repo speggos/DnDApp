@@ -29,6 +29,3 @@ export const rules = {
 }
 
 global.rules = rules;
-
-console.log(global.rules.races)
-console.log(global.rules.classes)

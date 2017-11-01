@@ -1,7 +1,7 @@
 class Character {
 	
 	constructor () {
-		this.name = "";
+		this.name = "a";
 		this.level = 1;
 		this.race = "";
 		this.class = "";
