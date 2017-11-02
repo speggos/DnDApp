@@ -89,37 +89,29 @@ export class ClassPicker extends Component {
 
 		return(
 			<Background>
-				<View style={{alignItems: 'center'}}>
+				<View style={styles.container}>
+			
+					<View style = {[styles.textContainer, {marginVertical: '10%'}]}>
+						<Text style={styles.title}>
+							Choose your Class
+						</Text>
 
-					<TouchableOpacity 
-						style={{}}
-						onPress={
-							()=>navigate("RacePicker", { character: character})}>
-
-						<View style = {[styles.textContainer]}>
-							<Text style={styles.title}>
-								Choose your Class
-							</Text>
-
-							<Text style={styles.text}>
-								This section allows you to select your class. If you're feeling lost, click the
-								book at the bottom of the screen at any time to view the DnD guide
-							</Text>
-						</View>
-
-					</TouchableOpacity>
-
-					<View style = {[styles.textContainer, {alignItems: 'center', marginVertical: '20%'}]}>
-						<FlatList
-							data = {classes}
-							renderItem={({item}) => 
-								<Text
-									onPress={()=>this.selectClass(character, item)}>
-										{item.name}
-								</Text>}
-						/>
-
+						<Text style={[styles.text, {marginBottom: 10}]}>
+							This section allows you to select your class. If you're feeling lost, click the
+							book at the bottom of the screen at any time to view the DnD guide
+						</Text>
 					</View>
+
+					<FlatList
+						contentContainerStyle = {styles.textContainer}
+						data = {classes}
+						renderItem={({item}) => 
+							<Text
+								style = {[styles.selections, {alignItems: 'center'}]}
+								onPress={()=>this.selectClass(character, item)}>
+									{item.name}
+							</Text>}
+					/>
 				</View>
 			</Background>
 		)
@@ -149,29 +141,29 @@ export class RacePicker extends Component {
 
 		return (
 				<Background>
-					<View style={{justifyContent: 'space-between', alignItems: 'center'}}>
+					<View style={styles.container}>
 
-						<TouchableOpacity 
-						onPress={()=> navigate("AbilityPicker", { character: this.props.character})}>
-
-						<View style={[styles.textContainer, {height: '20%'}]}>
+						<View style={[styles.textContainer, {marginVertical: '10%'}]}>
 							<Text style={styles.title}>
-								Choose a Race
+								Race
+							</Text>
+
+							<Text style = {[styles.text, {marginBottom: 10}]}>
+								This section allows you to select your race. If you're feeling lost, click the
+								book at the bottom of the screen at any time to view the DnD guide
 							</Text>
 						</View>
-						</TouchableOpacity>
 
-						<View style={[styles.textContainer, {height: '40%'}]}>
-							<FlatList
-								data = {races}
-								renderItem={({item}) => 
-									<Text 
-										style={styles.text}
-										onPress={()=>this.selectRace(character, item)}>
-											{item.name}
-									</Text>}
-							/>
-						</View>
+						<FlatList
+							contentContainerStyle = {styles.textContainer}
+							data = {races}
+							renderItem={({item}) => 
+								<Text 
+									style={styles.selections}
+									onPress={()=>this.selectRace(character, item)}>
+										{item.name}
+								</Text>}
+						/>
 					</View>
 				</Background>
 		)
@@ -209,6 +201,10 @@ export class WeaponPicker extends Component {
 
 	render() {
 
+		const { navigate } = this.props.navigation;
+ 		const { params } = this.props.navigation.state;
+		const character = params.character;	
+
 		return (
 			<Background>
 
@@ -217,10 +213,14 @@ export class WeaponPicker extends Component {
 	}
 }
 
+function cancel () {
+
+
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -246,5 +246,11 @@ const styles = StyleSheet.create({
   	marginHorizontal: 10,
   	textAlign: 'center',
   },
+  selections: {
+  	fontSize: 18,
+  	marginVertical: 3,
+  	width: '100%',
+  	fontWeight: 'bold',
+  }
 
 });

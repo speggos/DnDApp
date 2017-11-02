@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Button, Image, TouchableOpacity, ImageBackground, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, TouchableOpacity, ImageBackground, AsyncStorage, FlatList } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 
 import DiceRoller from './DiceRoller.js';
@@ -16,10 +16,10 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
   }
+
   render() {
     const { navigate } = this.props.navigation;
 
-    
     return (
 
         <ImageBackground
@@ -71,24 +71,18 @@ class CharacterList extends Component {
 
     characters = characters.concat([newCharacter]);
 
-    AsyncStorage.setItem(CHARACTER_KEY, JSON.stringify(characters))
-      .then((characters)=> {
-        this.setState({
-          Characters: characters
-        });
-      })
+    AsyncStorage.setItem(CHARACTER_KEY, JSON.stringify(characters));
+
+    this.setState({Characters: characters});
   }
 
   deleteCharacters = () => {
 
     var characters = [];
 
-    AsyncStorage.setItem(CHARACTER_KEY, JSON.stringify(characters))
-      .then((characters)=> {
-        this.setState({
-          Characters: characters
-        });
-      })
+    AsyncStorage.setItem(CHARACTER_KEY, JSON.stringify(characters));
+   
+    this.setState({Characters: characters});
   }
 
   componentDidMount() {
@@ -104,8 +98,7 @@ class CharacterList extends Component {
   render() {
 
     var characters = this.state.Characters;
-
-    var charList = characters.map((char)=> <CharacterButton {...this.props} character={char} key={characters.indexOf(char)} />)
+    //characters = global.rules.classes;
 
     const { navigate } = this.props.navigation;
 
@@ -114,18 +107,28 @@ class CharacterList extends Component {
 
     return (
       <View style = {styles.characters} >
-        {charList}
 
-        <TouchableOpacity style = {[styles.characterButton, {marginTop: 30}]} onPress = {this.addCharacter}>
-          <Text>Add New Blank Character</Text>
+        <FlatList
+          data = {characters}
+          renderItem = {({character}) =>
+            <TouchableOpacity
+              style = {styles.characterButton}
+              onPress = {()=> navigate("CharacterSheet", {character: this.props.character})}>
+                <Text>aa</Text>
+            </TouchableOpacity>
+          }
+        />
+     
+
+        <TouchableOpacity
+          style = {[styles.characterButton, {marginTop: 30}]}
+          onPress = {this.addCharacter}>
+            <Text>Add New Blank Character</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
           style = {[styles.characterButton, {marginTop: 10}]}
-          onPress = {
-            ()=> navigate("CharacterMaker", {character: new Character()})
-          }>
-
+          onPress = {()=> navigate("CharacterMaker", {character: new Character()})}>
             <Text>Create New Character</Text>
         </TouchableOpacity>
 
@@ -149,8 +152,7 @@ class CharacterButton extends Component {
     return (
       <TouchableOpacity
         style = {styles.characterButton}
-        onPress = {()=> navigate("CharacterSheet", {character: this.props.character})}
-        >
+        onPress = {()=> navigate("CharacterSheet", {character: this.props.character})}>
           <Text>{this.props.character.name}</Text>
       </TouchableOpacity>
     )
