@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TouchableHighlight, FlatList } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-import SortableList from 'react-native-sortable-list';
+//import SortableList from 'react-native-sortable-list';
+import SortableListView from 'react-native-sortable-listview'
 
 
 class Background extends Component {
@@ -156,6 +157,7 @@ export class RacePicker extends Component {
 						</View>
 
 						<FlatList
+							scrollEnabled = {false}
 							contentContainerStyle = {styles.textContainer}
 							data = {races}
 							renderItem={({item}) => 
@@ -177,9 +179,10 @@ export class AbilityPicker extends Component {
 		super(props);
 
 		this.state = {
-			rolls: [],
+			rolls: [0,0,0,0,0,0],
 			rollText: "0,0,0,0,0,0",
-			fake: [0,0,0,0,0,0],
+			values: [0,0,0,0,0],
+			order: [0,1,2,3,4,5],
 		}
 	}
 
@@ -230,11 +233,25 @@ export class AbilityPicker extends Component {
 
 	}
 
+	navigateWeapons = (character, rolls, order) => {
+
+		character.stats.strength.value = rolls[order[0]]
+		character.stats.dexterity.value = rolls[order[1]]
+		character.stats.constitution.value = rolls[order[2]]
+		character.stats.intelligence.value = rolls[order[3]]
+		character.stats.wisdom.value = rolls[order[4]]
+		character.stats.charisma.value = rolls[order[5]]
+
+		this.props.navigation.navigate("WeaponPicker", {character: character})
+
+	}
+
 	render() {
 
 		const {navigate} = this.props.navigation;
 		const { params } = this.props.navigation.state;
 		const character = params.character;
+		let order = this.state.order
 
 		return (
 			<Background>
@@ -247,8 +264,7 @@ export class AbilityPicker extends Component {
 
 						<Text style = {[styles.text, {marginBottom: 10}]}>
 							This section will help roll for your ability scores. Click the button below to
-							roll 6 D20s, which will give you the total amount of ability points which you
-							can distribute between the 6 categories below
+							roll 6 D20s, then drag and drop the values to customize your character's ability scores
 						</Text>
 					</View>
 
@@ -262,9 +278,9 @@ export class AbilityPicker extends Component {
 						{this.state.rollText}
 					</Text>
 
-					<View style = {[styles.textContainer, {flexDirection: 'row'}]}>
+					<View style = {[styles.textContainer, {flexDirection: 'row', width: '30%'}]}>
 
-						<View style>
+						<View>
 							<Text style = {styles.selections}>STR</Text>
 							<Text style = {styles.selections}>DEX</Text>
 							<Text style = {styles.selections}>CON</Text>
@@ -274,73 +290,40 @@ export class AbilityPicker extends Component {
 
 						</View>
 
-						<SortableList
-							data = {this.state.fake}
-							renderRow={({value}) => 
-								<Text>
-									11
-								</Text>
+						<SortableListView
+							scrollEnabled = {false}
+							limitScrolling = {true}
+							data = {this.state.rolls}
+							order = {order}
+							onRowMoved={e => {
+					          order.splice(e.to, 0, order.splice(e.from, 1)[0])
+					          this.setState({
+					          	order: order
+					          })
+					        }}
+							renderRow={value =>
+								<TouchableOpacity {...this.props.sortHandlers}>
+									<Text style = {styles.selections}>
+										{value}
+									</Text>
+								</TouchableOpacity>
 							}
 						/>
+
 					</View>
 
-				</View>
+					<TouchableHighlight
+						style = {[styles.textContainer, {marginTop: 20}]}
+						onPress = {()=>this.navigateWeapons(character, this.state.rolls, order)}>
+						<Text style={[styles.title, {fontWeight: 'bold'}]}>DONE</Text>
+					</TouchableHighlight>
 
+				</View>
 
 			</Background>
 		)
 	}
 }
-
-// class AbilityRow extends Component {
-
-// 	constructor (props) {
-// 		super(props);
-
-// 		this.state = {
-// 			ability: props.ability,
-// 			value: props.value,
-// 		}
-// 	}
-
-// 	add = () => {
-// 		var value = this.state.value;
-
-// 		this.setState({value: value+1});
-// 	}
-
-// 	render() {
-
-// 		const value = this.props.value;
-
-// 		return (
-
-// 			<View style = {styles.textContainer}>
-// 						<AbilityRow ability="STR" value={this.state.rolls[0]} />
-// 						<AbilityRow ability="DEX" value={this.state.rolls[1]} />
-// 						<AbilityRow ability="CON" value={this.state.rolls[2]} />
-// 						<AbilityRow ability="INT" value={this.state.rolls[3]} />
-// 						<AbilityRow ability="WIS" value={this.state.rolls[4]} />
-// 						<AbilityRow ability="CHA" value={this.state.rolls[5]} />
-// 					</View>
-// 			<View style = {{flexDirection: 'row'}}>
-// 				<Text style = {styles.ability}>
-// 					{this.state.ability}
-// 				</Text>
-
-// 				<Text style = {styles.ability}>
-// 					{value}
-// 				</Text>
-
-// 				<Text style={[styles.ability, {color: 'red'}]} onPress = {this.add}>
-// 					+
-// 				</Text>
-
-
-// 			</View>
-// 		)
-// 	}
-// }
 
 export class WeaponPicker extends Component {
 
@@ -360,11 +343,6 @@ export class WeaponPicker extends Component {
 			</Background>
 		)
 	}
-}
-
-function cancel () {
-
-
 }
 
 const styles = StyleSheet.create({

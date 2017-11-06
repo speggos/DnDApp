@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     width: '60%',
   },
   characterButton: {
-    height: '10%',
+    height: '7%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#A39367',
