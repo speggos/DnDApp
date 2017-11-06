@@ -97,26 +97,19 @@ class CharacterList extends Component {
 
   render() {
 
-    var characters = this.state.Characters;
-    //characters = global.rules.classes;
-
     const { navigate } = this.props.navigation;
-
-    console.log("Rendering, chars is")
-    console.log(characters);
 
     return (
       <View style = {styles.characters} >
 
         <FlatList
-          data = {characters}
-          renderItem = {({character}) =>
+          data = {this.state.Characters}
+          renderItem = {({item})=>
             <TouchableOpacity
-              style = {styles.characterButton}
-              onPress = {()=> navigate("CharacterSheet", {character: this.props.character})}>
-                <Text>aa</Text>
-            </TouchableOpacity>
-          }
+              style = {[styles.characterButton, {height: null}]}
+              onPress = {()=> navigate("CharacterSheet", {character: item})}>
+                <Text>{item.name}</Text>
+            </TouchableOpacity>}
         />
      
 
@@ -137,24 +130,6 @@ class CharacterList extends Component {
         </TouchableOpacity>
 
       </View>
-    )
-  }
-}
-
-class CharacterButton extends Component {
-
-  constructor(props) {
-    super(props);
-  }
-  render () {
-    const { navigate } = this.props.navigation;
-    
-    return (
-      <TouchableOpacity
-        style = {styles.characterButton}
-        onPress = {()=> navigate("CharacterSheet", {character: this.props.character})}>
-          <Text>{this.props.character.name}</Text>
-      </TouchableOpacity>
     )
   }
 }

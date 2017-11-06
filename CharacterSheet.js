@@ -10,7 +10,8 @@ class CharacterSheet extends Component {
 
 	render () {
  		const { params } = this.props.navigation.state;
-		const character = params.character	
+		const character = params.character
+		console.log(character);
 		return(
 			<View style={{flex: 1}}>
 				<Text>{character.name}</Text>
