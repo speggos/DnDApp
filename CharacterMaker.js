@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TouchableHighlight, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TouchableHighlight, FlatList, SectionList } from 'react-native';
 import { StackNavigator } from 'react-navigation';
-//import SortableList from 'react-native-sortable-list';
 import SortableListView from 'react-native-sortable-listview'
 
 
@@ -90,31 +89,29 @@ export class ClassPicker extends Component {
 
 
 		return(
-			<Background>
-				<View style={styles.container}>
+			<Background style={styles.container}>
 			
-					<View style = {[styles.textContainer, {marginVertical: '10%'}]}>
-						<Text style={[styles.title, {fontWeight: 'bold'}]}>
-							Choose your Class
-						</Text>
+				<View style = {[styles.textContainer, {marginVertical: '10%'}]}>
+					<Text style={[styles.title, {fontWeight: 'bold'}]}>
+						Choose your Class
+					</Text>
 
-						<Text style={[styles.text, {marginBottom: 10}]}>
-							This section allows you to select your class. If you're feeling lost, click the
-							book at the bottom of the screen at any time to view the DnD guide
-						</Text>
-					</View>
-
-					<FlatList
-						contentContainerStyle = {styles.textContainer}
-						data = {classes}
-						renderItem={({item}) => 
-							<Text
-								style = {[styles.selections, {alignItems: 'center'}]}
-								onPress={()=>this.selectClass(character, item)}>
-									{item.name}
-							</Text>}
-					/>
+					<Text style={[styles.text, {marginBottom: 10}]}>
+						This section allows you to select your class. If you're feeling lost, click the
+						book at the bottom of the screen at any time to view the DnD guide
+					</Text>
 				</View>
+
+				<FlatList
+					contentContainerStyle = {styles.textContainer}
+					data = {classes}
+					renderItem={({item}) => 
+						<Text
+							style = {[styles.selections, {alignItems: 'center'}]}
+							onPress={()=>this.selectClass(character, item)}>
+								{item.name}
+						</Text>}
+				/>
 			</Background>
 		)
 	}
@@ -142,32 +139,30 @@ export class RacePicker extends Component {
 		const races = global.rules.races;
 
 		return (
-				<Background>
-					<View style={styles.container}>
+				<Background style = {styles.container}>
 
-						<View style={[styles.textContainer, {marginVertical: '10%'}]}>
-							<Text style={[styles.title, {fontWeight: 'bold'}]}>
-								Choose Your Race
-							</Text>
+					<View style={[styles.textContainer, {marginVertical: '10%'}]}>
+						<Text style={[styles.title, {fontWeight: 'bold'}]}>
+							Choose Your Race
+						</Text>
 
-							<Text style = {[styles.text, {marginBottom: 10}]}>
-								This section allows you to select your race. If you're feeling lost, click the
-								book at the bottom of the screen at any time to view the DnD guide
-							</Text>
-						</View>
-
-						<FlatList
-							scrollEnabled = {false}
-							contentContainerStyle = {styles.textContainer}
-							data = {races}
-							renderItem={({item}) => 
-								<Text 
-									style={styles.selections}
-									onPress={()=>this.selectRace(character, item)}>
-										{item.name}
-								</Text>}
-						/>
+						<Text style = {[styles.text, {marginBottom: 10}]}>
+							This section allows you to select your race. If you're feeling lost, click the
+							book at the bottom of the screen at any time to view the DnD guide
+						</Text>
 					</View>
+
+					<FlatList
+						scrollEnabled = {false}
+						contentContainerStyle = {styles.textContainer}
+						data = {races}
+						renderItem={({item}) => 
+							<Text 
+								style={styles.selections}
+								onPress={()=>this.selectRace(character, item)}>
+									{item.name}
+							</Text>}
+					/>
 				</Background>
 		)
 	}
@@ -318,8 +313,7 @@ export class AbilityPicker extends Component {
 						<Text style={[styles.title, {fontWeight: 'bold'}]}>DONE</Text>
 					</TouchableHighlight>
 
-				</View>
-
+					</View>
 			</Background>
 		)
 	}
@@ -329,18 +323,142 @@ export class WeaponPicker extends Component {
 
 	constructor(props) {
 		super(props);
+
 	}
 
 	render() {
 
 		const { navigate } = this.props.navigation;
  		const { params } = this.props.navigation.state;
-		const character = params.character;	
+		const character = params.character;
+
+		const weapons = global.rules.weapons;
 
 		return (
 			<Background>
+				<View style={styles.container}>
 
+					<View style={[styles.textContainer, {marginVertical: '10%', height: '20%'}]}>
+						<Text style={[styles.title, {fontWeight: 'bold'}]}>
+							Choose Your Weapons
+						</Text>
+
+						<Text style = {[styles.text, {marginBottom: 10}]}>
+							This section allows you to add weapons to your character. You can find which weapons your character
+							can wield by checking your class. Click a weapon to add it to your inventory
+						</Text>
+					</View>
+
+					<View style={[styles.textContainer,{height: '60%', width: '80%'} ]}>
+						<SectionList
+							renderItem={({item}) => <WeaponRow weapon={item} character={character} />}
+							renderSectionHeader={({section}) => <Text style={{fontWeight: 'bold'}}>{section.title} Weapons</Text>}
+							sections={[
+								{data: weapons.simpleMeelee, title: "Simple Meelee"},
+						    	{data: weapons.simpleRanged, title: "Simple Ranged"},
+						    	{data: weapons.martialRanged, title: "Martial Meelee"},
+						    	{data: weapons.martialMeelee, title: "Martial Ranged"},
+						  ]}
+						/>
+					</View>
+				</View>
 			</Background>
+		)
+	}
+}
+
+class WeaponRow extends Component {
+
+	constructor(props) {
+		super(props);
+
+		this.state= { 
+			weapon: this.props.weapon,
+			character: this.props.character,
+			highlight: false,
+		};
+	}
+
+	toggleWeapon = () => {
+		
+		var weapons = this.state.character.weapons;
+		var weapon = this.state.weapon;
+
+		if (this.state.highlight) {
+			//Deselect weapon
+			var index = weapons.indexOf(weapon)
+
+			if (index>-1) {
+				weapons.splice(index, 1)
+			}
+		} else {
+			//Add weapon
+			weapons.push(weapon);
+		}
+
+		this.setState({
+			highlight: !this.state.highlight
+		})
+	}
+
+	//Yeah this code is ugly
+	formatDamage(damage) {
+		if (damage.length == 1) {
+			return "D" + damage[0];
+		} else if (damage.length == 2) {
+			if (damage[0]==damage[1]) {
+				return "2D" + damage[0];
+			} else {
+				return "D" + damage[0] + " + D" + damage[1];
+			}
+		}
+	}	
+
+	render () {
+
+		const weapon = this.state.weapon;
+
+		const damage = this.formatDamage(weapon.damage)
+
+		return (
+			<TouchableOpacity
+				style={[{flexDirection: 'row'}, this.state.highlight && {backgroundColor: '#444'}]}
+				onPress = {this.toggleWeapon}>
+					<Text style={{width: '25%'}}>
+						{weapon.name}
+					</Text>
+
+					<Text style={{width: '10%'}}>
+						{damage}
+					</Text>
+
+					<Text>
+						{weapon.properties}
+					</Text>
+			</TouchableOpacity>
+		)
+	}
+}
+
+export class ArmorPicker extends Component {
+
+	constructor(props) {
+		super(props);
+	}
+
+	render() {
+
+		return(
+			<View style={[styles.textContainer, {marginVertical: '10%', height: '20%'}]}>
+				<Text style={[styles.title, {fontWeight: 'bold'}]}>
+					Choose Your Armour
+				</Text>
+
+				<Text style = {[styles.text, {marginBottom: 10}]}>
+					This section allows you to add armour to your character. You can find which armor your character
+					can equipt by checking your class. Click armour to add it to your inventory
+				</Text>
+			</View>
 		)
 	}
 }

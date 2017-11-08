@@ -68,14 +68,14 @@ class Character {
 				persuasion: false
 			}
 		}
-		armour = []
-		weapons = []
-		classFeature = {
+		this.armour = []
+		this.weapons = []
+		this.classFeature = {
 			name: "",
 			current: 1,
 			max: 1
 		}
-		spells = [];
+		this.spells = [];
 	}
 
 }
