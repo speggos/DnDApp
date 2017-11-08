@@ -70,8 +70,30 @@ export const rules = {
 			{name: 'Crossbow, heavy', damage: [10], damageType: 'Piercing', properties: 'Ammunition (range 100/400), heavy, loading, two-handed'},
 			{name: 'Longbow', damage: [8], damageType: 'Piercing', properties: 'Ammunition (range 150/600), heavy, two-handed'},
 			{name: 'Net', damage: [0], damageType: '', properties: 'Special, thrown (range 5/15)'},
-
-		]
+		],
+	},
+	armour: {
+		lightArmour: [
+			{name: 'Padded', value: 11, properties: 'Disadvantage on Stealth'},
+			{name: 'Leather', value: 11, properties: ''},
+			{name: 'Armour', value: 12, properties: ''},
+		],
+		mediumArmour: [
+			{name: 'Hide', value: 12, properties: ''},
+			{name: 'Chain shirt', value: 13, properties: ''},
+			{name: 'Scale mail', value: 14, properties: 'Disadvantage on Stealth'},
+			{name: 'Breastplate', value: 14, properties: ''},
+			{name: 'Half plate', value: 15, properties: 'Disadvantage on Stealth'},
+		],
+		heavyArmour: [
+			{name: 'Ring mail', value: 14, properties: 'Disadvantage on Stealth'},
+			{name: 'Chain mail', value: 16, properties: 'Requires 13 Str, Disadvantage on Stealth'},
+			{name: 'Splint', value: 17, properties: 'Requires 15 Str, Disadvantage on Stealth'},
+			{name: 'Plate', value: 18, properties: 'Requires 15 Str, Disadvantage on Stealth'},
+		],
+		shields: [
+			{name: 'Shield', value: 2, properties: 'Rquires a free hand'},
+		],
 	}
 }
 

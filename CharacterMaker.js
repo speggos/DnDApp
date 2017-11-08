@@ -1,25 +1,7 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TouchableHighlight, FlatList, SectionList } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TouchableHighlight, FlatList, SectionList, Button } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import SortableListView from 'react-native-sortable-listview'
-
-
-class Background extends Component {
-
-	render() {
-    	const {source, children, style, ...props} = this.props
-	    return (
-
-	        <ImageBackground
-	          style={[styles.container, styles.banner]}
-	          source={require('./background.png')}
-	        >
-	        	{ children }
-
-	        </ImageBackground>
-	    )
-	}
-}
 
 export class CharacterMaker extends Component {
 
@@ -27,11 +9,19 @@ export class CharacterMaker extends Component {
 		super(props)
 	}
 
+	static navigationOptions = ({navigation}) => ({
+    	title: 'Welcome',
+    	headerRight: <Button 
+    		title="Next"
+    		onPress={()=> navigation.navigate("ClassPicker", { character: navigation.state.params.character})}
+    	/>
+  	});
+
 	render() {
 
 		const { navigate } = this.props.navigation;
  		const { params } = this.props.navigation.state;
-		const character = params.character;	
+		const character = params.character;
 
 		return (
 
@@ -70,6 +60,14 @@ export class ClassPicker extends Component {
 		super(props);
 	}
 
+	static navigationOptions = ({navigation}) => ({
+    	title: 'Class',
+    	headerRight: <Button 
+    		title="Next"
+    		onPress={()=> navigation.navigate("RacePicker", { character: navigation.state.params.character})}
+    	/>
+  	});
+
 	selectClass = (character, item) => {
 
 		character.class = item.name;
@@ -84,9 +82,6 @@ export class ClassPicker extends Component {
 		const character = params.character;	
 
 		const classes = global.rules.classes;
-
-		console.log(character);
-
 
 		return(
 			<Background style={styles.container}>
@@ -122,6 +117,14 @@ export class RacePicker extends Component {
 	constructor(props) {
 		super(props)
 	}
+
+	static navigationOptions = ({navigation}) => ({
+    	title: 'Race',
+    	headerRight: <Button 
+    		title="Next"
+    		onPress={()=> navigation.navigate("AbilityPicker", { character: navigation.state.params.character})}
+    	/>
+  	});
 
 	selectRace = (character, item) => {
 
@@ -180,6 +183,14 @@ export class AbilityPicker extends Component {
 			order: [0,1,2,3,4,5],
 		}
 	}
+
+	static navigationOptions = ({navigation}) => ({
+    	title: 'Abilities',
+    	headerRight: <Button 
+    		title="Next"
+    		onPress={()=> navigation.navigate("WeaponPicker", { character: navigation.state.params.character})}
+    	/>
+  	});
 
 	formatRolls (rolls) {
 
@@ -323,12 +334,19 @@ export class WeaponPicker extends Component {
 
 	constructor(props) {
 		super(props);
-
 	}
+
+	static navigationOptions = ({navigation}) => ({
+    	title: 'Weapons',
+    	headerRight: <Button 
+    		title="Next"
+    		onPress={()=> navigation.navigate("ArmourPicker", { character: navigation.state.params.character})}
+    	/>
+  	});
 
 	render() {
 
-		const { navigate } = this.props.navigation;
+		const { navigate } = this.props.navigation.navigate;
  		const { params } = this.props.navigation.state;
 		const character = params.character;
 
@@ -338,7 +356,7 @@ export class WeaponPicker extends Component {
 			<Background>
 				<View style={styles.container}>
 
-					<View style={[styles.textContainer, {marginVertical: '10%', height: '20%'}]}>
+					<View style={[styles.textContainer, {marginBottom: '5%', height: '20%'}]}>
 						<Text style={[styles.title, {fontWeight: 'bold'}]}>
 							Choose Your Weapons
 						</Text>
@@ -349,7 +367,7 @@ export class WeaponPicker extends Component {
 						</Text>
 					</View>
 
-					<View style={[styles.textContainer,{height: '60%', width: '80%'} ]}>
+					<View style={[styles.textContainer,{height: '70%', width: '80%'} ]}>
 						<SectionList
 							renderItem={({item}) => <WeaponRow weapon={item} character={character} />}
 							renderSectionHeader={({section}) => <Text style={{fontWeight: 'bold'}}>{section.title} Weapons</Text>}
@@ -364,6 +382,82 @@ export class WeaponPicker extends Component {
 				</View>
 			</Background>
 		)
+	}
+}
+
+export class ArmourPicker extends Component {
+
+	constructor(props) {
+		super(props);
+	}
+
+	static navigationOptions = ({navigation}) => ({
+    	title: 'Armour',
+    	headerRight: <Button 
+    		title="Finish"
+    		onPress={()=> navigation.navigate("ArmourPicker", { character: navigation.state.params.character})}
+    	/>
+  	});
+
+	render() {
+
+		const { params } = this.props.navigation.state;
+		const character = params.character;
+
+		const armour = global.rules.armour;
+		const weapons = global.rules.weapons;
+
+		console.log(armour);
+		console.log(character);
+
+
+		return (
+			<Background>
+				<View style={styles.container}>
+
+					<View style={[styles.textContainer, {marginBottom: '5%', height: '20%'}]}>
+						<Text style={[styles.title, {fontWeight: 'bold'}]}>
+							Choose Your Armour
+						</Text>
+
+						<Text style = {[styles.text, {marginBottom: 10}]}>
+							This section allows you to add armour to your character. You can find which armor your character
+							can equipt by checking your class. Click armour to add it to your inventory
+						</Text>
+					</View>
+
+					<View style={[styles.textContainer,{height: '70%', width: '80%'} ]}>
+						<SectionList
+							renderItem={({item}) => <ArmourRow armour={item} character={character} />}
+							renderSectionHeader={({section}) => <Text style={{fontWeight: 'bold'}}>{section.title}</Text>}
+							sections={[
+								{data: armour.lightArmour, title: "Light Armour"},
+								{data: armour.mediumArmour, title: "Medium Armour"},
+						    	{data: armour.heavyArmour, title: "Heavy Armour"},
+						    	{data: armour.shields, title: "Shields"}
+						  	]}
+						/>
+					</View>
+				</View>
+			</Background>
+		)
+	}
+}
+
+class Background extends Component {
+
+	render() {
+    	const {source, children, style, ...props} = this.props
+	    return (
+
+	        <ImageBackground
+	          style={[styles.container, styles.banner]}
+	          source={require('./background.png')}
+	        >
+	        	{ children }
+
+	        </ImageBackground>
+	    )
 	}
 }
 
@@ -440,25 +534,62 @@ class WeaponRow extends Component {
 	}
 }
 
-export class ArmorPicker extends Component {
+class ArmourRow extends Component {
 
 	constructor(props) {
 		super(props);
+
+		this.state= { 
+			armour: this.props.armour,
+			character: this.props.character,
+			highlight: false,
+		};
 	}
 
-	render() {
+	toggleArmour = () => {
+		
+		var armours = this.state.character.armour;
+		var armour = this.state.armour;
 
-		return(
-			<View style={[styles.textContainer, {marginVertical: '10%', height: '20%'}]}>
-				<Text style={[styles.title, {fontWeight: 'bold'}]}>
-					Choose Your Armour
-				</Text>
+		if (this.state.highlight) {
+			//Deselect armour
+			var index = armours.indexOf(armour)
 
-				<Text style = {[styles.text, {marginBottom: 10}]}>
-					This section allows you to add armour to your character. You can find which armor your character
-					can equipt by checking your class. Click armour to add it to your inventory
-				</Text>
-			</View>
+			if (index>-1) {
+				armours.splice(index, 1)
+			}
+		} else {
+			//Add armour
+			armours.push(armour);
+		}
+
+		console.log(armours)
+
+		this.setState({
+			highlight: !this.state.highlight
+		})
+	}
+
+	render () {
+
+		const armour = this.state.armour;
+
+		return (
+			<TouchableOpacity
+				style={[{flexDirection: 'row'}, this.state.highlight && {backgroundColor: '#444'}]}
+				onPress = {this.toggleArmour}>
+					<Text style={{width: '25%'}}>
+						{armour.name}
+					</Text>
+
+					<Text style={{width: '10%'}}>
+						{armour.value}
+					</Text>
+
+					<Text>
+						{armour.properties}
+					</Text>
+			</TouchableOpacity>
 		)
 	}
 }

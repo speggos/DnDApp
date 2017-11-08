@@ -5,7 +5,7 @@ import { StackNavigator } from 'react-navigation';
 import DiceRoller from './DiceRoller.js';
 import Character from './Character.js';
 import CharacterSheet from './CharacterSheet.js';
-import {CharacterMaker, ClassPicker, RacePicker, AbilityPicker, WeaponPicker} from './CharacterMaker.js';
+import {CharacterMaker, ClassPicker, RacePicker, AbilityPicker, WeaponPicker, ArmourPicker} from './CharacterMaker.js';
 
 import './rules.js';
 
@@ -142,6 +142,7 @@ const DndApp = StackNavigator({
   RacePicker: { screen: RacePicker},
   AbilityPicker: { screen: AbilityPicker},
   WeaponPicker: { screen: WeaponPicker},
+  ArmourPicker: { screen: ArmourPicker},
   Roller: { screen: DiceRoller }
 });
 
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
     width: '60%',
   },
   characterButton: {
-    height: '7%',
+    height: '10%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#A39367',
