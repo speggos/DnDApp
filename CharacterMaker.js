@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TouchableHighlight, FlatList, SectionList, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TouchableHighlight, FlatList, SectionList, Button, AsyncStorage } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import SortableListView from 'react-native-sortable-listview'
+
+var CHARACTER_KEY = "Characters"
 
 export class CharacterMaker extends Component {
 
@@ -389,15 +391,50 @@ export class ArmourPicker extends Component {
 
 	constructor(props) {
 		super(props);
+
+		this.state={
+			Characters: []
+		}
 	}
 
-	static navigationOptions = ({navigation}) => ({
-    	title: 'Armour',
-    	headerRight: <Button 
-    		title="Finish"
-    		onPress={()=> navigation.navigate("ArmourPicker", { character: navigation.state.params.character})}
-    	/>
-  	});
+	static navigationOptions = ({navigation}) => {
+		const {params = {}} = navigation.state;
+		return {
+	    	title: 'Armour',
+	    	headerRight: <Button 
+	    		title="Finish"
+	    		onPress={() => params.addCharacter()}
+	    	/>
+	    }
+  	};
+
+  	addCharacter = () => {
+
+  		console.log("here")
+
+  		var navigation = this.props.navigation;
+	    var characters = this.state.Characters;
+
+	    characters = characters.concat([navigation.state.params.character]);
+
+	    console.log(characters);
+
+	    AsyncStorage.setItem(CHARACTER_KEY, JSON.stringify(characters));
+
+	    navigation.navigate("Home");
+	}
+
+	  componentDidMount() {
+
+	  	this.props.navigation.setParams({ addCharacter: this.addCharacter})
+	    AsyncStorage.getItem(CHARACTER_KEY)
+	      .then((response)=> JSON.parse(response))
+	      .then((characters) => {
+	        this.setState({
+	          Characters: characters
+	        });
+	      })
+	  }
 
 	render() {
 
@@ -405,11 +442,6 @@ export class ArmourPicker extends Component {
 		const character = params.character;
 
 		const armour = global.rules.armour;
-		const weapons = global.rules.weapons;
-
-		console.log(armour);
-		console.log(character);
-
 
 		return (
 			<Background>
@@ -426,7 +458,7 @@ export class ArmourPicker extends Component {
 						</Text>
 					</View>
 
-					<View style={[styles.textContainer,{height: '70%', width: '80%'} ]}>
+					<View style={[styles.textContainer,{width: '80%'} ]}>
 						<SectionList
 							renderItem={({item}) => <ArmourRow armour={item} character={character} />}
 							renderSectionHeader={({section}) => <Text style={{fontWeight: 'bold'}}>{section.title}</Text>}
