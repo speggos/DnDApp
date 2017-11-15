@@ -16,7 +16,6 @@ class CharacterSheet extends Component {
 			<View style={{flex: 1}}>
 				<Text>{character.name}</Text>
 				<Text>{character.race}</Text>
-				<Text>{character.weapons}</Text>
 
 			</View>
 		)

@@ -5,7 +5,7 @@ import { StackNavigator } from 'react-navigation';
 import DiceRoller from './DiceRoller.js';
 import Character from './Character.js';
 import CharacterSheet from './CharacterSheet.js';
-import {CharacterMaker, ClassPicker, RacePicker, AbilityPicker, WeaponPicker, ArmourPicker} from './CharacterMaker.js';
+import {CharacterMaker, ClassPicker, RacePicker, AbilityPicker, SkillPicker, WeaponPicker, ArmourPicker} from './CharacterMaker.js';
 
 import './rules.js';
 
@@ -65,7 +65,6 @@ class CharacterList extends Component {
 
     var newCharacter = new Character();
     var characters = this.state.Characters;
-    console.log(characters);
 
     newCharacter.name = "Character " + characters.length;
 
@@ -111,7 +110,6 @@ class CharacterList extends Component {
                 <Text>{item.name}</Text>
             </TouchableOpacity>}
         />
-     
 
         <TouchableOpacity
           style = {[styles.characterButton, {marginTop: 30}]}
@@ -141,6 +139,7 @@ const DndApp = StackNavigator({
   ClassPicker: { screen: ClassPicker},
   RacePicker: { screen: RacePicker},
   AbilityPicker: { screen: AbilityPicker},
+  SkillPicker: { screen: SkillPicker},
   WeaponPicker: { screen: WeaponPicker},
   ArmourPicker: { screen: ArmourPicker},
   Roller: { screen: DiceRoller }

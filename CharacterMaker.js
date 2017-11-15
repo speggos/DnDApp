@@ -74,6 +74,63 @@ export class ClassPicker extends Component {
 
 		character.class = item.name;
 
+		character.abilities += item.level1;
+
+		switch (item.name) {
+			case "Barbarian":
+				character.stats.strength.savingThrow = true;
+				character.stats.constitution.savingThrow = true;
+				break;
+			case "Bard":
+				character.stats.dexterity.savingThrow = true;
+				character.stats.charisma.savingThrow = true;
+				break;
+			case "Cleric":
+				character.stats.wisdom.savingThrow = true;
+				character.stats.charisma.savingThrow = true;
+				break;
+			case "Druid":
+				character.stats.intelligence.savingThrow = true;
+				character.stats.wisdom.savingThrow = true;
+				break;
+			case "Fighter":
+				character.stats.strength.savingThrow = true;
+				character.stats.constitution.savingThrow = true;
+				break;
+			case "Monk":
+				character.stats.strength.savingThrow = true;
+				character.stats.dexterity.savingThrow = true;
+				break;
+			case "Paladin":
+				character.stats.wisdom.savingThrow = true;
+				character.stats.charisma.savingThrow = true;
+				break;
+			case "Ranger":
+				character.stats.dexterity.savingThrow = true;
+				character.stats.strength.savingThrow = true;
+				break;
+			case "Rogue":
+				character.stats.intelligence.savingThrow = true;
+				character.stats.dexterity.savingThrow = true;
+				break;
+			case "Sorcerer":
+				character.stats.constitution.savingThrow = true;
+				character.stats.charisma.savingThrow = true;
+				break;
+			case "Warlock":
+				character.stats.wisdom.savingThrow = true;
+				character.stats.charisma.savingThrow = true;
+				break;
+			case "Wizard":
+				character.stats.intelligence.savingThrow = true;
+				character.stats.wisdom.savingThrow = true;
+				break;
+			default:
+				console.log("No cases fit")
+				break;
+
+		}
+
 		this.props.navigation.navigate("RacePicker", {character: character});
 	}
 
@@ -131,6 +188,55 @@ export class RacePicker extends Component {
 	selectRace = (character, item) => {
 
 		character.race = item.name;
+
+		character.abilities += item.level1;
+
+		switch(item.name) {
+			case "Dragonborn":
+				character.stats.strength.value += 2;
+				character.stats.charisma.value += 1;
+				character.speed = 30;
+				break;
+			case "Dwarf":
+				character.stats.constitution.value += 2;
+				character.speed = 25;
+				break;
+			case "Elf":
+				character.stats.dexterity.value += 2;
+				character.speed = 30;
+				break;
+			case "Gnome":
+				character.stats.intelligence.value += 2;
+				character.speed = 25;
+				break;
+			case "Half-Elf":
+				character.stats.charisma.value += 2;
+				character.speed = 30;
+				break;
+			case "Half-Orc":
+				character.stats.strength.value += 2;
+				character.stats.constitution.value += 1;
+				character.speed = 30;
+				break;
+			case "Halfling":
+				character.stats.dexterity.value += 2;
+				character.speed = 25;
+				break;
+			case "Human":
+				character.stats.strength.value += 1;
+				character.stats.dexterity.value += 1;
+				character.stats.constitution.value += 1;
+				character.stats.intelligence.value += 1;
+				character.stats.wisdom.value += 1;
+				character.stats.charisma.value += 1;
+				character.speed = 30;
+				break;
+			case "Tiefling":
+				character.stats.intelligence.value += 1;
+				character.stats.charisma.value += 2;
+				character.speed = 30;
+				break;
+		}
 
 		this.props.navigation.navigate("AbilityPicker", { character: character});
 	}
@@ -190,7 +296,7 @@ export class AbilityPicker extends Component {
     	title: 'Abilities',
     	headerRight: <Button 
     		title="Next"
-    		onPress={()=> navigation.navigate("WeaponPicker", { character: navigation.state.params.character})}
+    		onPress={()=> navigation.navigate("SkillPicker", { character: navigation.state.params.character})}
     	/>
   	});
 
@@ -243,14 +349,14 @@ export class AbilityPicker extends Component {
 
 	navigateWeapons = (character, rolls, order) => {
 
-		character.stats.strength.value = rolls[order[0]]
-		character.stats.dexterity.value = rolls[order[1]]
-		character.stats.constitution.value = rolls[order[2]]
-		character.stats.intelligence.value = rolls[order[3]]
-		character.stats.wisdom.value = rolls[order[4]]
-		character.stats.charisma.value = rolls[order[5]]
+		character.stats.strength.value += rolls[order[0]]
+		character.stats.dexterity.value += rolls[order[1]]
+		character.stats.constitution.value += rolls[order[2]]
+		character.stats.intelligence.value += rolls[order[3]]
+		character.stats.wisdom.value += rolls[order[4]]
+		character.stats.charisma.value += rolls[order[5]]
 
-		this.props.navigation.navigate("WeaponPicker", {character: character})
+		this.props.navigation.navigate("SkillPicker", {character: character})
 
 	}
 
@@ -327,6 +433,56 @@ export class AbilityPicker extends Component {
 					</TouchableHighlight>
 
 					</View>
+			</Background>
+		)
+	}
+}
+
+export class SkillPicker extends Component {
+
+	constructor(props) {
+		super(props);
+	}
+
+	static navigationOptions = ({navigation}) => ({
+		title: 'Skills',
+		headerRight: <Button
+			title="Next"
+			onPress={()=> navigation.navigate("WeaponPicker", {character: navigation.state.params.character})}
+		/>
+	});
+
+	render() {
+
+		const { navigate } = this.props.navigation.navigate;
+		const { params } = this.props.navigation.state;
+		const character = params.character;
+
+		const skills = character.skills;
+
+		return(
+			<Background>
+				<View style={styles.container}>
+
+						<Text style={[styles.textContainer, styles.title]}>
+							Select your Skills
+						</Text>
+
+					<View style={[styles.textContainer,{height: '80%', width: '80%'} ]}>
+						<SectionList
+
+							renderItem={({item}) => <SkillRow skill={item}/>}
+							renderSectionHeader={({section}) => <Text style={{fontWeight: 'bold'}}>{section.title} Skills</Text>}
+							sections={[
+								{data: skills.strength, title: "Strength"},
+								{data: skills.dexterity, title: "Dexterity"},
+								{data: skills.intelligence, title: "Intelligence"},
+								{data: skills.wisdom, title: "Wisdom"},
+								{data: skills.charisma, title: "Charisma"},
+						  ]}
+						/>
+					</View>
+				</View>
 			</Background>
 		)
 	}
@@ -410,16 +566,14 @@ export class ArmourPicker extends Component {
 
   	addCharacter = () => {
 
-  		console.log("here")
-
   		var navigation = this.props.navigation;
 	    var characters = this.state.Characters;
 
 	    characters = characters.concat([navigation.state.params.character]);
 
-	    console.log(characters);
-
 	    AsyncStorage.setItem(CHARACTER_KEY, JSON.stringify(characters));
+
+	    console.log(this.state.Characters)
 
 	    navigation.navigate("Home");
 	}
@@ -442,6 +596,8 @@ export class ArmourPicker extends Component {
 		const character = params.character;
 
 		const armour = global.rules.armour;
+
+		console.log(character)
 
 		return (
 			<Background>
@@ -490,6 +646,47 @@ class Background extends Component {
 
 	        </ImageBackground>
 	    )
+	}
+}
+
+class SkillRow extends Component {
+
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			skill: this.props.skill,
+			highlight: false,
+		};
+	}
+
+	toggleSkill = () => {
+		
+		this.state.skill.proficient = !this.state.skill.proficient;
+
+		this.setState({
+			highlight: !this.state.highlight
+		})
+	}
+
+	componentDidMount() {
+		if (this.state.skill.proficient) {
+			this.setState({
+				highlight: true
+			})
+		}
+	}
+
+	render() {
+		return(
+			<TouchableOpacity
+				style={this.state.highlight && {backgroundColor: '#444'}}
+				onPress = {this.toggleSkill}>
+					<Text>
+						{this.state.skill.name}
+					</Text>
+			</TouchableOpacity>
+		)
 	}
 }
 
@@ -594,8 +791,6 @@ class ArmourRow extends Component {
 			//Add armour
 			armours.push(armour);
 		}
-
-		console.log(armours)
 
 		this.setState({
 			highlight: !this.state.highlight

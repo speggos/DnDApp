@@ -21,52 +21,59 @@ class Character {
 		this.stats = {
 			strength: {
 				value: 0,
-				mod: 0,
 				savingThrow: false,
-				athletics: false
 			},
 			dexterity: {
 				value: 0,
-				mod: 0,
 				savingThrow: false,
-				acrobatics: false,
-				sleightOfHand: false,
-				stealth: false
 			},
 			constitution: {
 				value: 0,
-				mod: 0,
 				savingThrow: false
 			},
 			intelligence: {
 				value: 0,
-				mod: 0,
 				savingThrow: false,
-				arcana: false,
-				history: false,
-				investigation: false,
-				nature: false,
-				religion: false
 			},
 			wisdom: {
 				value: 0,
-				mod: 0,
 				savingThrow: false,
-				animalHandling: false,
-				insight: false,
-				medicine: false,
-				perception: false,
-				survival: false
 			},
 			charisma: {
 				value: 0,
-				mod: 0,
 				savingThrow: false,
-				deception: false,
-				intimidation: false,
-				performance: false,
-				persuasion: false
 			}
+		}
+		this.skills = {
+			strength: [
+				{name: "Athletics", proficient: false},
+			],
+			dexterity: [
+				{name: "Acrobatics", proficient: false},
+				{name: "Sleight Of Hand", proficient: false},
+				{name: "Stealth", proficient: false},
+			],
+			intelligence: [
+				{name: "Arcana", proficient: false},
+				{name: "History", proficient: false},
+				{name: "Investigation", proficient: false},
+				{name: "Nature", proficient: false},
+				{name: "Religion", proficient: false},
+			],
+			wisdom: [
+				{name: "Animal Handling", proficient: false},
+				{name: "Insight", proficient: false},
+				{name: "Medicine", proficient: false},
+				{name: "Perception", proficient: false},
+				{name: "Survival", proficient: false},
+			],
+			charisma: [
+				{name: "Deception", proficient: false},
+				{name: "Intimidation", proficient: false},
+				{name: "Performance", proficient: false},
+				{name: "Persuasion", proficient: false},
+			]
+
 		}
 		this.armour = []
 		this.weapons = []
@@ -76,6 +83,7 @@ class Character {
 			max: 1
 		}
 		this.spells = [];
+		this.abilities = "";
 	}
 
 }
