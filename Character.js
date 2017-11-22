@@ -1,10 +1,13 @@
 class Character {
 	
 	constructor () {
-		this.name = "";
+		this.name = "New Character";
 		this.level = 1;
 		this.race = "";
 		this.class = "";
+		this.ac = 10;
+		this.speed = 15;
+		this.proficiencyBonus = 2;
 		this.background = "";
 		this.hp = {
 			current: 1,
@@ -13,14 +16,14 @@ class Character {
 		};
 		this.hitDice = {
 			current: 1,
-			max: 1
+			max: 1,
+			value: 0,
 		};
-		this.ac = 10;
-		this.speed = 15;
-		this.proficiencyBonus = 2;
+
 		this.stats = {
 			strength: {
 				value: 0,
+				modifier: 0,
 				savingThrow: false,
 			},
 			dexterity: {

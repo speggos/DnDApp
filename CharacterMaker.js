@@ -80,10 +80,18 @@ export class ClassPicker extends Component {
 			case "Barbarian":
 				character.stats.strength.savingThrow = true;
 				character.stats.constitution.savingThrow = true;
+
+				character.classFeature.name = "Rage";
+				character.classFeature.max = 2;
+				character.classFeature.current = 2;
 				break;
 			case "Bard":
 				character.stats.dexterity.savingThrow = true;
 				character.stats.charisma.savingThrow = true;
+
+				character.classFeature.name = "Bardic Inspiration";
+				character.classFeature.max = 2;
+				character.classFeature.current = 2;
 				break;
 			case "Cleric":
 				character.stats.wisdom.savingThrow = true;
@@ -96,6 +104,10 @@ export class ClassPicker extends Component {
 			case "Fighter":
 				character.stats.strength.savingThrow = true;
 				character.stats.constitution.savingThrow = true;
+
+				character.classFeature.name = "Second Wind";
+				character.classFeature.max = 1;
+				character.classFeature.current = 1;
 				break;
 			case "Monk":
 				character.stats.strength.savingThrow = true;
@@ -104,6 +116,10 @@ export class ClassPicker extends Component {
 			case "Paladin":
 				character.stats.wisdom.savingThrow = true;
 				character.stats.charisma.savingThrow = true;
+
+				character.classFeature.name = "Lay On Hands";
+				character.classFeature.max = 1;
+				character.classFeature.current = 1;
 				break;
 			case "Ranger":
 				character.stats.dexterity.savingThrow = true;
@@ -124,6 +140,10 @@ export class ClassPicker extends Component {
 			case "Wizard":
 				character.stats.intelligence.savingThrow = true;
 				character.stats.wisdom.savingThrow = true;
+
+				character.classFeature.name = "Arcane Recovery";
+				character.classFeature.max = 1;
+				character.classFeature.current = 1;
 				break;
 			default:
 				console.log("No cases fit")
@@ -568,12 +588,15 @@ export class ArmourPicker extends Component {
 
   		var navigation = this.props.navigation;
 	    var characters = this.state.Characters;
+	    var newCharacter = navigation.state.params.character
 
-	    characters = characters.concat([navigation.state.params.character]);
+	    calculateCharacter(newCharacter);
+
+	    console.log(newCharacter)
+
+	    characters = characters.concat([newCharacter]);
 
 	    AsyncStorage.setItem(CHARACTER_KEY, JSON.stringify(characters));
-
-	    console.log(this.state.Characters)
 
 	    navigation.navigate("Home");
 	}
@@ -596,8 +619,6 @@ export class ArmourPicker extends Component {
 		const character = params.character;
 
 		const armour = global.rules.armour;
-
-		console.log(character)
 
 		return (
 			<Background>
@@ -820,6 +841,167 @@ class ArmourRow extends Component {
 		)
 	}
 }
+
+function calculateCharacter(character) {
+
+	calculateStats(character.stats);
+
+	calculateHealth(character)
+
+	calculateAC(character)
+
+	//features
+}
+
+function calculateStats(stats) {
+
+	var stat;
+
+	for (var key in stats) {
+		stat = stats[key];
+		
+		stat.modifier = Math.floor((stat.value - 10)/2)
+	}
+}
+
+function calculateHealth(character) {
+
+	var maxHealth = 0;
+	var characterClass = character.class;
+	var constitutionMod = character.stats.constitution.modifier;
+	var hitDice = character.hitDice
+
+	switch (characterClass) {
+		case "Barbarian":
+			maxHealth += 12;
+			hitDice.value = 12;
+			break;
+		case "Bard":
+			maxHealth += 8;
+			hitDice.value = 8;
+			break;
+		case "Cleric":
+			maxHealth += 8;
+			hitDice.value = 8;
+			break;
+		case "Druid":
+			maxHealth += 8;
+			hitDice.value = 8;
+			break;
+		case "Fighter":
+			maxHealth += 10;
+			hitDice.value = 10;
+			break;
+		case "Monk":
+			maxHealth += 8;
+			hitDice.value = 8;
+			break;
+		case "Paladin":
+			maxHealth += 10;
+			hitDice.value = 10;
+			break;
+		case "Ranger":
+			maxHealth += 10;
+			hitDice.value = 10;
+			break;
+		case "Rogue":
+			maxHealth += 8;
+			hitDice.value = 8;
+			break;
+		case "Sorcerer":
+			maxHealth += 6;
+			hitDice.value = 6;
+			break;
+		case "Warlock":
+			maxHealth += 8;
+			hitDice.value = 8;
+			break;
+		case "Wizard":
+			maxHealth += 6;
+			hitDice.value = 6;
+			break;
+		default:
+			console.log("**No cases fit**")
+			break;
+	}
+
+	maxHealth += constitutionMod;
+
+	character.hp.max = maxHealth;
+	character.hp.current = maxHealth;
+}
+
+function calculateAC (character) {
+
+	var armours = character.armour;
+	var dexMod = character.stats.dexterity.modifier;
+
+	var maxArmour = {value: 0};
+	var hasShield = false;
+
+	//Find strongest armour, and check for shield
+	for (var i=0; i<armours.length; i++) {
+		if (armours[i].value > maxArmour.value && armours[i].name != "Shield") {
+			maxArmour = armours[i];
+		}
+		if (armours[i].name == "Shield") {
+			hasShield = true;
+		}
+	}
+
+	console.log(maxArmour);
+
+
+	//Add dex modifier to armour
+	if (maxArmour.name == "Padded" || maxArmour.name == "Leather") {
+		character.ac = 11 + dexMod;
+	} else if (maxArmour.name == "Studded Leather") {
+		character.ac = 12 + dexMod;
+	} else if (maxArmour.name == "Hide") {
+		if (dexMod > 2) {
+			character.ac = 12+2;
+		} else {
+			character.ac = 12+dexMod;
+		}
+	} else if (maxArmour.name == "Chain Shirt") {
+		if (dexMod > 2) {
+			character.ac = 13+2;
+		} else {
+			character.ac = 13+dexMod;
+		}
+	} else if (maxArmour.name == "Scale Mail" || maxArmour.name == "Breastplate") {
+		if (dexMod > 2) {
+			character.ac = 14+2;
+		} else {
+			character.ac = 14+dexMod;
+		}
+	} else if (maxArmour.name == "Half Plate") {
+		if (dexMod > 2) {
+			character.ac = 15+2;
+		} else {
+			character.ac = 15+dexMod;
+		}
+	} else if (maxArmour.name == "Ring Mail") {
+		character.ac = 14;
+	} else if (maxArmour.name == "Chain Mail") {
+		character.ac = 16;
+	} else if (maxArmour.name == "Splint") {
+		character.ac = 17
+	} else if (maxArmour.name == "Plate") {
+		character.ac = 18
+	} else {
+		console.log("Couldn't find any armour. Max armour is");
+		console.log(maxArmour);
+		character.ac = 10 + dexMod;
+	}
+
+	if (hasShield) {
+		character.ac += 2;
+	}
+
+}
+
+
 
 const styles = StyleSheet.create({
   container: {
