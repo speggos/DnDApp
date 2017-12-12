@@ -24,15 +24,21 @@ class HomeScreen extends Component {
 
         <ImageBackground
           style={[styles.container, styles.banner]}
-          source={require('./background.png')}
+          source={require('./images/background.png')}
         >
 
-          <Banner/>
+          <View style = {styles.bannerContainer}>
+            <Image
+              style = {styles.banner}
+              source = {require('./images/title.png')}
+            />
+          </View>
+
           <CharacterList {...this.props}/>
 
-          <Button
-            onPress = {()=> navigate("Roller")}
-            title = "Go to Dice Roller"
+          <Image
+            source={require('./images/book.png')}
+            style={{flex: 0.8, top: '6%', justifyContent: 'flex-end', resizeMode: 'contain'}}
           />
 
         </ImageBackground>
@@ -40,18 +46,6 @@ class HomeScreen extends Component {
   }
 }
 
-class Banner extends Component {
-  render() {
-    return (
-      <View style = {styles.bannerContainer}>
-        <Image
-          style = {styles.banner}
-          source = {require('./title.png')}
-        />
-      </View>
-    )
-  }
-}
 
 class CharacterList extends Component {
 
@@ -105,10 +99,11 @@ class CharacterList extends Component {
           data = {this.state.Characters}
           renderItem = {({item})=>
             <TouchableOpacity
-              style = {[styles.characterButton, {height: null}]}
+              style = {[styles.characterButton]}
               onPress = {()=> navigate("CharacterSheet", {character: item})}>
                 <Text>{item.name}</Text>
             </TouchableOpacity>}
+          keyExtractor={(item, index) => index}
         />
 
         <TouchableOpacity
@@ -156,28 +151,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center'
   },
   banner: {
     flex: 1,
     width: null,
-    height: null
+    height: null,
   },
   bannerContainer: {
     flex: 1.3,
-    width: '90%'
+    width: '90%',
   },
   characters: {
     flex: 2,
     width: '60%',
   },
   characterButton: {
-    height: '10%',
+    height: 25,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#A39367',
     borderWidth: 2,
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
   }
 });

@@ -661,7 +661,7 @@ class Background extends Component {
 
 	        <ImageBackground
 	          style={[styles.container, styles.banner]}
-	          source={require('./background.png')}
+	          source={require('./images/background.png')}
 	        >
 	        	{ children }
 

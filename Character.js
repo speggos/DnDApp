@@ -24,27 +24,27 @@ class Character {
 			strength: {
 				value: 0,
 				modifier: 0,
-				savingThrow: false,
+				proficient: false,
 			},
 			dexterity: {
 				value: 0,
-				savingThrow: false,
+				proficient: false,
 			},
 			constitution: {
 				value: 0,
-				savingThrow: false
+				proficient: false
 			},
 			intelligence: {
 				value: 0,
-				savingThrow: false,
+				proficient: false,
 			},
 			wisdom: {
 				value: 0,
-				savingThrow: false,
+				proficient: false,
 			},
 			charisma: {
 				value: 0,
-				savingThrow: false,
+				proficient: false,
 			}
 		}
 		this.skills = {
