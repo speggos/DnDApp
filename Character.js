@@ -2,6 +2,7 @@ class Character {
 	
 	constructor () {
 		this.name = "New Character";
+		this.exp = 1;
 		this.level = 1;
 		this.race = "";
 		this.class = "";
@@ -46,7 +47,7 @@ class Character {
 				value: 0,
 				proficient: false,
 			}
-		}
+		};
 		this.skills = {
 			strength: [
 				{name: "Athletics", proficient: false},
