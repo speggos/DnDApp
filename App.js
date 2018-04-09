@@ -11,9 +11,10 @@ import {
     FlatList
 } from 'react-native';
 import {StackNavigator} from 'react-navigation';
-import DiceRoller from './DiceRoller.js';
-import Character from './Character.js';
-import CharacterSheet from './CharacterSheet.js';
+import DiceRoller from './src/components/DiceRoller.js';
+import Character from './src/helpers/Character.js';
+import CharacterSheet from './src/scenes/CharacterSheet/CharacterSheet.js'
+import CharacterStats from './src/scenes/CharacterSheet/CharacterStats.js';
 import {
     CharacterMaker,
     ClassPicker,
@@ -22,9 +23,9 @@ import {
     SkillPicker,
     WeaponPicker,
     ArmourPicker
-} from './CharacterMaker.js';
-import './rules.js';
-import title from './images/title.png'
+} from './src/scenes/CharacterMaker.js';
+import './src/helpers/rules.js';
+import title from './src/images/title.png'
 
 
 const CHARACTER_KEY = "Characters";
@@ -42,7 +43,7 @@ class HomeScreen extends Component {
 
             <ImageBackground
                 style={[styles.container, styles.banner]}
-                source={require('./images/background.png')}
+                source={require('./src/images/background.png')}
             >
 
                 <View style={styles.bannerContainer}>
@@ -55,7 +56,7 @@ class HomeScreen extends Component {
                 <CharacterList {...this.props}/>
 
                 <Image
-                    source={require('./images/book.png')}
+                    source={require('./src/images/book.png')}
                     style={{flex: 0.8, top: '6%', justifyContent: 'flex-end', resizeMode: 'contain'}}
                 />
 
@@ -148,6 +149,7 @@ class CharacterList extends Component {
 const DndApp = StackNavigator({
     Home: {screen: HomeScreen},
     CharacterSheet: {screen: CharacterSheet},
+    CharacterStats: {screen: CharacterStats},
     CharacterMaker: {screen: CharacterMaker},
     ClassPicker: {screen: ClassPicker},
     RacePicker: {screen: RacePicker},
