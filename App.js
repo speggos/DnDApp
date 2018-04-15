@@ -13,8 +13,8 @@ import {
 import {StackNavigator} from 'react-navigation';
 import DiceRoller from './src/components/DiceRoller.js';
 import Character from './src/helpers/Character.js';
-import CharacterSheet from './src/scenes/CharacterSheet/CharacterSheet.js'
-import CharacterStats from './src/scenes/CharacterSheet/CharacterStats.js';
+import CharacterSheet from './src/scenes/CharacterSheet/index.js'
+import RuleBook from './src/scenes/RuleBook/index';
 import {
     CharacterMaker,
     ClassPicker,
@@ -57,6 +57,7 @@ class HomeScreen extends Component {
 
                 <Image
                     source={require('./src/images/book.png')}
+                    onClick={()=>this.props.navigation.navigate('RuleBook')}
                     style={{flex: 0.8, top: '6%', justifyContent: 'flex-end', resizeMode: 'contain'}}
                 />
 
@@ -119,7 +120,7 @@ class CharacterList extends Component {
                     renderItem={({item}) =>
                         <TouchableOpacity
                             style={[styles.characterButton]}
-                            onPress={() => navigate("CharacterSheet", {character: item})}>
+                            onPress={() => navigate("CharacterSheet", {character: item, navigate: navigate})}>
                             <Text>{item.name}</Text>
                         </TouchableOpacity>}
                     keyExtractor={(item, index) => index}
@@ -147,9 +148,9 @@ class CharacterList extends Component {
 }
 
 const DndApp = StackNavigator({
-    Home: {screen: HomeScreen},
+    //Home: {screen: HomeScreen},
+    Home: {screen: CharacterSheet},
     CharacterSheet: {screen: CharacterSheet},
-    CharacterStats: {screen: CharacterStats},
     CharacterMaker: {screen: CharacterMaker},
     ClassPicker: {screen: ClassPicker},
     RacePicker: {screen: RacePicker},
@@ -157,6 +158,7 @@ const DndApp = StackNavigator({
     SkillPicker: {screen: SkillPicker},
     WeaponPicker: {screen: WeaponPicker},
     ArmourPicker: {screen: ArmourPicker},
+    RuleBook: {screen: RuleBook},
     Roller: {screen: DiceRoller}
 });
 

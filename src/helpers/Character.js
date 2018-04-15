@@ -86,7 +86,17 @@ class Character {
 			current: 1,
 			max: 1
 		}
-		this.spells = [];
+		this.spells = [
+			[],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+        ];
 		this.abilities = "";
 	}
 

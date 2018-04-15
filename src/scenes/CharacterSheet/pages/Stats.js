@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 import { StyleSheet, Text, View, Button, Image, TouchableOpacity, ImageBackground, SectionList, TextInput } from 'react-native';
 
-export default class CharacterStats extends Component {
+export default class Stats extends Component {
 
     render() {
 
         //TODO make images less hacky
-        const statBox = require('../../images/statBox.png')
-
+        const statBox = require('../../../images/statBox.png')
+        console.log(this.props)
         const character = this.props.character;
         const stats = character.stats;
 
@@ -17,10 +17,6 @@ export default class CharacterStats extends Component {
                 <View style={{flex: .15}}>
                     <Text style={[styles.textContainer, styles.title, {marginVertical: '5%', paddingHorizontal: 1}]}>
                         {character.name}, {character.class}, Level {character.level}
-                    </Text>
-
-                    <Text style={{position: 'absolute', left: 250, top: '25%', fontWeight: 'bold', fontSize: 20}}>
-                        ->
                     </Text>
 
                 </View>
@@ -37,21 +33,21 @@ export default class CharacterStats extends Component {
                             {character.exp} EXP
                         </Text>
 
-                        <ImageContainer image={require('../../images/HP.png')}>
+                        <ImageContainer image={require('../../../images/HP.png')}>
                             <Text style={styles.hpTopText}>{character.hp.current}</Text>
                             <Text style={styles.hpBottomText}>{character.hp.max}</Text>
                         </ImageContainer>
 
-                        <ImageContainer image={require('../../images/AC.png')}>
+                        <ImageContainer image={require('../../../images/AC.png')}>
                             <Text style={styles.ACText}>{character.ac}</Text>
                         </ImageContainer>
 
-                        <ImageContainer image={require('../../images/initiative.png')}>
+                        <ImageContainer image={require('../../../images/initiative.png')}>
                             <Text style={styles.ACText}>{stats.dexterity.value}</Text>
                         </ImageContainer>
 
                         <Image
-                            source={require('../../images/dice.png')}
+                            source={require('../../../images/dice.png')}
                             style={styles.image}
                         />
 
@@ -137,8 +133,10 @@ export default class CharacterStats extends Component {
 
 
                 <Image
-                    source={require('../../images/book.png')}
+                    source={require('../../../images/book.png')}
                     style={styles.bookImage}
+                    onPress={()=>console.log('called')}//;this.props.navigation.navigate('RuleBook')}}
+                    onClick={()=>console.log('click')}
                 />
             </View>
         );
@@ -173,7 +171,7 @@ const styles = StyleSheet.create({
     image: {
         flex: 1,
         width: null,
-        resizeMode: 'stretch',
+        //resizeMode: 'stretch',
     },
     bookImage: {
         flex: 0.2,
